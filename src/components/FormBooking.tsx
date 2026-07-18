@@ -246,15 +246,37 @@ export default function FormBooking({
                 {formatRupiah(totalPrice)}
               </span>
             </div>
-            <div className="text-sm text-text-secondary font-body bg-primary/10 border border-primary/20 rounded-lg p-3 mt-3">
-              Silakan transfer sesuai nominal di atas ke rekening berikut:
-              <br />
-              <br />
-              <strong className="text-white">BCA 1234567890</strong> a.n.
-              BadmintonSpace
-              <br />
-              <strong className="text-white">Mandiri 0987654321</strong> a.n.
-              BadmintonSpace
+            <div className="border border-white/10 bg-white/5 p-4 rounded-xl space-y-3 mt-3">
+              <p className="text-xs text-text-secondary font-body">
+                Silakan transfer sesuai nominal di atas ke rekening berikut:
+              </p>
+              <div className="text-xs font-body text-white space-y-1">
+                <p>
+                  <span className="font-bold">BCA 1234567890</span> a.n. BadmintonSpace
+                </p>
+                <p>
+                  <span className="font-bold">Mandiri 0987654321</span> a.n. BadmintonSpace
+                </p>
+              </div>
+
+              {qrisUrl && (
+                <>
+                  <hr className="border-white/5 my-2" />
+                  <div className="space-y-2">
+                    <p className="text-[10px] text-text-tertiary font-body uppercase tracking-wider">
+                      Atau Scan QRIS Resmi:
+                    </p>
+                    <div className="bg-white p-3 rounded-xl max-w-[180px] shadow-md border border-white/20">
+                      <img
+                        src={qrisUrl}
+                        alt="QRIS Pembayaran"
+                        className="w-full h-auto object-contain aspect-square"
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
 

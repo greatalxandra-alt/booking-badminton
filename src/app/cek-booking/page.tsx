@@ -9,7 +9,11 @@ import {
   Calendar,
   Clock,
   Activity,
-  ChevronLeft,
+  ChevronDown,
+  ChevronUp,
+  User,
+  Phone,
+  FileText,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -18,6 +22,7 @@ export default function CekBooking() {
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
   const [results, setResults] = useState<Booking[]>([]);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,7 +77,7 @@ export default function CekBooking() {
       case "pending":
         return (
           <span className="bg-primary/20 text-primary px-3 py-1.5 rounded-lg text-xs font-bold font-body border border-primary/30 uppercase tracking-wider">
-            Menunggu Pembayaran
+            Menunggu Konfirmasi Admin
           </span>
         );
       case "batal":
@@ -115,7 +120,7 @@ export default function CekBooking() {
           </h1>
           <p className="text-sm font-body text-text-secondary max-w-lg mx-auto">
             Masukkan Nomor WhatsApp atau ID Booking Anda untuk melihat status
-            pemesanan, melakukan pembayaran, atau mengunggah bukti transfer.
+            pemesanan Anda.
           </p>
         </div>
 
@@ -248,13 +253,51 @@ export default function CekBooking() {
                             {formatRupiah(totalHarga)}
                           </span>
                         </div>
-                        <Link
-                          href={`/booking/${booking.id}/sukses`}
+                        <button
+                          onClick={() => setExpandedId(expandedId === booking.id ? null : booking.id)}
                           className="inline-flex items-center justify-center px-6 py-2.5 rounded-lg text-sm font-bold font-body text-white bg-surface-dark border border-white/10 hover:border-primary hover:text-primary transition-all min-h-[44px]"
                         >
-                          Lihat Detail
-                        </Link>
+                          {expandedId === booking.id ? (
+                            <><ChevronUp className="w-4 h-4 mr-1.5" />Sembunyikan</>
+                          ) : (
+                            <><ChevronDown className="w-4 h-4 mr-1.5" />Lihat Detail</>
+                          )}
+                        </button>
                       </div>
+
+                      {/* Expandable Detail Panel */}
+                      {expandedId === booking.id && (
+                        <div className="mt-4 bg-surface-darker rounded-xl p-5 border border-white/5 space-y-4 animate-in slide-in-from-top-2 fade-in duration-200">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="flex items-start space-x-3">
+                              <User className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                              <div>
+                                <p className="text-xs text-text-secondary font-body">Nama Pemesan</p>
+                                <p className="text-sm font-bold font-body text-white">{booking.nama_pemesan}</p>
+                              </div>
+                            </div>
+                            <div className="flex items-start space-x-3">
+                              <Phone className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                              <div>
+                                <p className="text-xs text-text-secondary font-body">Nomor WhatsApp</p>
+                                <p className="text-sm font-bold font-body text-white">{booking.no_hp}</p>
+                              </div>
+                            </div>
+                          </div>
+                          {booking.catatan && (
+                            <div className="flex items-start space-x-3">
+                              <FileText className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                              <div>
+                                <p className="text-xs text-text-secondary font-body">Catatan</p>
+                                <p className="text-sm font-body text-white">{booking.catatan}</p>
+                              </div>
+                            </div>
+                          )}
+                          <div className="pt-3 border-t border-white/5">
+                            <p className="text-xs text-text-tertiary font-body">Dibuat pada: {new Date(booking.created_at).toLocaleString('id-ID')}</p>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 );
