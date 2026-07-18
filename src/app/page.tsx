@@ -90,16 +90,28 @@ export default async function Home() {
 
           {/* Center Navigation (Desktop Only) */}
           <div className="hidden md:flex items-center space-x-6">
-            <a href="#fasilitas" className="text-sm font-medium font-body text-text-secondary hover:text-white transition-colors duration-200">
+            <a
+              href="#fasilitas"
+              className="text-sm font-medium font-body text-text-secondary hover:text-white transition-colors duration-200"
+            >
               Fasilitas
             </a>
-            <a href="#lapangan" className="text-sm font-medium font-body text-text-secondary hover:text-white transition-colors duration-200">
+            <a
+              href="#lapangan"
+              className="text-sm font-medium font-body text-text-secondary hover:text-white transition-colors duration-200"
+            >
               Lapangan
             </a>
-            <a href="#galeri" className="text-sm font-medium font-body text-text-secondary hover:text-white transition-colors duration-200">
+            <a
+              href="#galeri"
+              className="text-sm font-medium font-body text-text-secondary hover:text-white transition-colors duration-200"
+            >
               Galeri
             </a>
-            <a href="#kontak" className="text-sm font-medium font-body text-text-secondary hover:text-white transition-colors duration-200">
+            <a
+              href="#kontak"
+              className="text-sm font-medium font-body text-text-secondary hover:text-white transition-colors duration-200"
+            >
               Lokasi & Kontak
             </a>
           </div>
@@ -163,7 +175,10 @@ export default async function Home() {
       </section>
 
       {/* Building Amenities Section */}
-      <section id="fasilitas" className="scroll-mt-24 px-4 md:px-6 py-16 lg:px-12 max-w-[1440px] mx-auto w-full relative z-10 border-t border-white/5 bg-surface-darker">
+      <section
+        id="fasilitas"
+        className="scroll-mt-24 px-4 md:px-6 py-16 lg:px-12 max-w-[1440px] mx-auto w-full relative z-10 border-t border-white/5 bg-surface-darker"
+      >
         <div className="flex flex-col items-center justify-center text-center mb-12">
           <div className="inline-flex items-center justify-center py-1.5 px-3 rounded-md bg-primary/10 text-primary text-xs font-bold font-body uppercase tracking-wider mb-4 border border-primary/20">
             Building Amenities
@@ -313,7 +328,10 @@ export default async function Home() {
 
       {/* Gallery Section */}
       {galeriList && galeriList.length > 0 && (
-        <section id="galeri" className="scroll-mt-24 py-16 lg:py-24 max-w-[1200px] mx-auto w-full px-4 md:px-6 relative z-10 border-t border-white/5">
+        <section
+          id="galeri"
+          className="scroll-mt-24 py-16 lg:py-24 max-w-[1200px] mx-auto w-full px-4 md:px-6 relative z-10 border-t border-white/5"
+        >
           <div className="flex flex-col items-center justify-center text-center mb-12">
             <div className="inline-block px-3 py-1.5 text-xs font-bold tracking-wider text-primary bg-primary/10 rounded-md uppercase font-body border border-primary/20 mb-4">
               OUR GALLERY
@@ -337,7 +355,7 @@ export default async function Home() {
                   alt={foto.caption || "Galeri Arena"}
                   className="w-full h-full object-cover group-hover:scale-105 transition-all duration-300"
                 />
-                
+
                 {foto.caption && (
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
                     <p className="text-white text-sm font-body font-medium translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
@@ -352,7 +370,10 @@ export default async function Home() {
       )}
 
       {/* Contact & Location Section */}
-      <section id="kontak" className="scroll-mt-24 px-4 md:px-6 py-16 lg:px-12 max-w-[1200px] mx-auto w-full relative z-10 border-t border-white/5">
+      <section
+        id="kontak"
+        className="scroll-mt-24 px-4 md:px-6 py-16 lg:px-12 max-w-[1200px] mx-auto w-full relative z-10 border-t border-white/5"
+      >
         <div className="flex flex-col items-center justify-center text-center mb-12">
           <div className="inline-block px-3 py-1.5 text-xs font-bold tracking-wider text-primary bg-primary/10 rounded-md uppercase font-body border border-primary/20 mb-4">
             CONTACT & LOCATION
