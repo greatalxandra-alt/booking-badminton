@@ -1,30 +1,47 @@
-import { useState, useRef } from 'react';
-import { createBooking } from '@/lib/actions/booking';
-import { uploadBuktiFile } from '@/lib/actions/upload';
-import { Loader2, Upload, CheckCircle, Image as ImageIcon, Copy, ArrowLeft } from 'lucide-react';
-import { toast } from 'sonner';
-import Link from 'next/link';
+import { useState, useRef } from "react";
+import { createBooking } from "@/lib/actions/booking";
+import { uploadBuktiFile } from "@/lib/actions/upload";
+import {
+  Loader2,
+  Upload,
+  CheckCircle,
+  Image as ImageIcon,
+  Copy,
+  ArrowLeft,
+} from "lucide-react";
+import { toast } from "sonner";
+import Link from "next/link";
 
 interface FormBookingProps {
   lapanganId: string;
   selectedDate: string;
   selectedSlots: string[];
   hargaPerJam: number;
+  qrisUrl?: string;
 }
 
-export default function FormBooking({ lapanganId, selectedDate, selectedSlots, hargaPerJam }: FormBookingProps) {
+export default function FormBooking({
+  lapanganId,
+  selectedDate,
+  selectedSlots,
+  hargaPerJam,
+  qrisUrl,
+}: FormBookingProps) {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [loading, setLoading] = useState(false);
   const [bookingId, setBookingId] = useState<string | null>(null);
 
   // Tahap 1: Data Diri
   const [formData, setFormData] = useState({
-    nama_pemesan: '',
-    no_hp: '',
-    catatan: ''
+    nama_pemesan: "",
+    no_hp: "",
+    catatan: "",
   });
 
-  const isFormValid = formData.nama_pemesan.trim() !== '' && formData.no_hp.trim().length >= 9 && selectedSlots.length > 0;
+  const isFormValid =
+    formData.nama_pemesan.trim() !== "" &&
+    formData.no_hp.trim().length >= 9 &&
+    selectedSlots.length > 0;
   const totalPrice = selectedSlots.length * hargaPerJam;
 
   // Tahap 2: Upload File
@@ -32,9 +49,11 @@ export default function FormBooking({ lapanganId, selectedDate, selectedSlots, h
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleLanjutPembayaran = (e: React.FormEvent) => {
@@ -72,7 +91,7 @@ export default function FormBooking({ lapanganId, selectedDate, selectedSlots, h
     }
 
     setLoading(true);
-    
+
     try {
       // 1. Upload file dulu
       const fileData = new FormData();
@@ -88,8 +107,10 @@ export default function FormBooking({ lapanganId, selectedDate, selectedSlots, h
       // 2. Jika sukses upload, kirim payload lengkap ke database
       const sortedSlots = [...selectedSlots].sort();
       const jamMulai = sortedSlots[0];
-      const lastSlotHour = parseInt(sortedSlots[sortedSlots.length - 1].split(':')[0]);
-      const jamSelesai = `${(lastSlotHour + 1).toString().padStart(2, '0')}:00`;
+      const lastSlotHour = parseInt(
+        sortedSlots[sortedSlots.length - 1].split(":")[0],
+      );
+      const jamSelesai = `${(lastSlotHour + 1).toString().padStart(2, "0")}:00`;
 
       const result = await createBooking({
         lapangan_id: lapanganId,
@@ -99,24 +120,30 @@ export default function FormBooking({ lapanganId, selectedDate, selectedSlots, h
         nama_pemesan: formData.nama_pemesan,
         no_hp: formData.no_hp,
         catatan: formData.catatan || undefined,
-        bukti_pembayaran_url: uploadResult.url
+        bukti_pembayaran_url: uploadResult.url,
       });
 
       if (result.success && result.bookingId) {
         setBookingId(result.bookingId);
         setStep(3); // Tampilkan modal sukses
       } else {
-        toast.error(result.error || 'Terjadi kesalahan saat memproses pesanan.');
+        toast.error(
+          result.error || "Terjadi kesalahan saat memproses pesanan.",
+        );
       }
     } catch (err) {
-      toast.error('Terjadi kesalahan jaringan.');
+      toast.error("Terjadi kesalahan jaringan.");
     } finally {
       setLoading(false);
     }
   };
 
   const formatRupiah = (angka: number) => {
-    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(angka);
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      maximumFractionDigits: 0,
+    }).format(angka);
   };
 
   const copyToClipboard = () => {
@@ -130,11 +157,16 @@ export default function FormBooking({ lapanganId, selectedDate, selectedSlots, h
     <div className="relative">
       {/* TAHAP 1: Form Data Diri */}
       {step === 1 && (
-        <form onSubmit={handleLanjutPembayaran} className="space-y-5 animate-in fade-in duration-300">
+        <form
+          onSubmit={handleLanjutPembayaran}
+          className="space-y-5 animate-in fade-in duration-300"
+        >
           <div>
-            <label className="block text-sm font-bold font-body text-white mb-2">Nama Lengkap</label>
-            <input 
-              type="text" 
+            <label className="block text-sm font-bold font-body text-white mb-2">
+              Nama Lengkap
+            </label>
+            <input
+              type="text"
               name="nama_pemesan"
               value={formData.nama_pemesan}
               onChange={handleChange}
@@ -143,11 +175,13 @@ export default function FormBooking({ lapanganId, selectedDate, selectedSlots, h
               required
             />
           </div>
-          
+
           <div>
-            <label className="block text-sm font-bold font-body text-white mb-2">Nomor WhatsApp</label>
-            <input 
-              type="tel" 
+            <label className="block text-sm font-bold font-body text-white mb-2">
+              Nomor WhatsApp
+            </label>
+            <input
+              type="tel"
               name="no_hp"
               value={formData.no_hp}
               onChange={handleChange}
@@ -156,10 +190,12 @@ export default function FormBooking({ lapanganId, selectedDate, selectedSlots, h
               required
             />
           </div>
-          
+
           <div>
-            <label className="block text-sm font-bold font-body text-white mb-2">Catatan (Opsional)</label>
-            <textarea 
+            <label className="block text-sm font-bold font-body text-white mb-2">
+              Catatan (Opsional)
+            </label>
+            <textarea
               name="catatan"
               value={formData.catatan}
               onChange={handleChange}
@@ -174,9 +210,10 @@ export default function FormBooking({ lapanganId, selectedDate, selectedSlots, h
               type="submit"
               disabled={!isFormValid}
               className={`w-full flex justify-center items-center py-3.5 px-4 rounded-xl text-sm font-bold font-body transition-all h-[48px]
-                ${(!isFormValid) 
-                  ? 'bg-disabled text-white/50 cursor-not-allowed opacity-50' 
-                  : 'bg-primary text-white hover:bg-primary-hover hover:shadow-[0px_4px_12px_rgba(249,115,22,0.3)] active:bg-primary-active'
+                ${
+                  !isFormValid
+                    ? "bg-disabled text-white/50 cursor-not-allowed opacity-50"
+                    : "bg-primary text-white hover:bg-primary-hover hover:shadow-[0px_4px_12px_rgba(249,115,22,0.3)] active:bg-primary-active"
                 }
               `}
             >
@@ -189,7 +226,7 @@ export default function FormBooking({ lapanganId, selectedDate, selectedSlots, h
       {/* TAHAP 2: Upload Bukti Transfer */}
       {step === 2 && (
         <div className="space-y-6 animate-in slide-in-from-right-4 fade-in duration-300">
-          <button 
+          <button
             onClick={() => setStep(1)}
             className="flex items-center text-sm font-body text-text-secondary hover:text-white transition-colors"
           >
@@ -198,22 +235,33 @@ export default function FormBooking({ lapanganId, selectedDate, selectedSlots, h
           </button>
 
           <div className="bg-surface-darker rounded-xl p-4 border border-white/10">
-            <h4 className="text-sm font-bold font-body text-white mb-3">Informasi Pembayaran</h4>
+            <h4 className="text-sm font-bold font-body text-white mb-3">
+              Informasi Pembayaran
+            </h4>
             <div className="flex justify-between items-center mb-2">
-              <span className="text-sm text-text-secondary font-body">Total Tagihan</span>
-              <span className="text-lg font-bold font-display text-primary">{formatRupiah(totalPrice)}</span>
+              <span className="text-sm text-text-secondary font-body">
+                Total Tagihan
+              </span>
+              <span className="text-lg font-bold font-display text-primary">
+                {formatRupiah(totalPrice)}
+              </span>
             </div>
             <div className="text-sm text-text-secondary font-body bg-primary/10 border border-primary/20 rounded-lg p-3 mt-3">
               Silakan transfer sesuai nominal di atas ke rekening berikut:
-              <br/><br/>
-              <strong className="text-white">BCA 1234567890</strong> a.n. BadmintonSpace
-              <br/>
-              <strong className="text-white">Mandiri 0987654321</strong> a.n. BadmintonSpace
+              <br />
+              <br />
+              <strong className="text-white">BCA 1234567890</strong> a.n.
+              BadmintonSpace
+              <br />
+              <strong className="text-white">Mandiri 0987654321</strong> a.n.
+              BadmintonSpace
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-bold font-body text-white mb-2">Upload Bukti Transfer</label>
+            <label className="block text-sm font-bold font-body text-white mb-2">
+              Upload Bukti Transfer
+            </label>
             <div
               onClick={() => fileInputRef.current?.click()}
               className={`relative border-2 border-dashed rounded-xl p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-all min-h-[160px]
@@ -300,14 +348,22 @@ export default function FormBooking({ lapanganId, selectedDate, selectedSlots, h
                 Pemesanan Berhasil!
               </h3>
               <p className="text-text-secondary font-body text-sm mb-6">
-                Data pemesanan dan bukti pembayaran Anda telah kami terima. Harap simpan ID Booking Anda.
+                Data pemesanan dan bukti pembayaran Anda telah kami terima.
+                Harap simpan ID Booking Anda.
               </p>
-              
+
               <div className="w-full bg-surface-darker border border-white/10 rounded-xl p-4 mb-6">
-                <p className="text-xs text-text-tertiary font-body uppercase tracking-wider mb-1">ID Booking Anda</p>
+                <p className="text-xs text-text-tertiary font-body uppercase tracking-wider mb-1">
+                  ID Booking Anda
+                </p>
                 <div className="flex items-center justify-between">
-                  <span className="font-display font-bold text-xl text-primary truncate mr-2">{bookingId}</span>
-                  <button onClick={copyToClipboard} className="p-2 bg-white/5 hover:bg-white/10 text-white rounded-lg transition-colors">
+                  <span className="font-display font-bold text-xl text-primary truncate mr-2">
+                    {bookingId}
+                  </span>
+                  <button
+                    onClick={copyToClipboard}
+                    className="p-2 bg-white/5 hover:bg-white/10 text-white rounded-lg transition-colors"
+                  >
                     <Copy className="w-4 h-4" />
                   </button>
                 </div>

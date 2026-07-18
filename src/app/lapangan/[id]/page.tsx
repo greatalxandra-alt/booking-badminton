@@ -1,4 +1,5 @@
 import { getLapanganById } from '@/lib/actions/lapangan';
+import { getSemuaPengaturan } from '@/lib/actions/pengaturan';
 import { notFound } from 'next/navigation';
 import { Clock, CheckCircle, MapPin, Activity, ChevronLeft } from 'lucide-react';
 import BookingWidget from '@/components/BookingWidget';
@@ -14,6 +15,7 @@ type Props = {
 export default async function LapanganDetail(props: Props) {
   const params = await props.params;
   const lapangan = await getLapanganById(params.id);
+  const settings = await getSemuaPengaturan();
 
   if (!lapangan) {
     notFound();
@@ -91,6 +93,7 @@ export default async function LapanganDetail(props: Props) {
         <BookingWidget 
           lapanganId={lapangan.id} 
           hargaPerJam={lapangan.harga_per_jam} 
+          qrisUrl={settings['qris_url']}
         />
         
       </div>

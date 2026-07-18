@@ -7,9 +7,10 @@ import FormBooking from './FormBooking';
 interface BookingWidgetProps {
   lapanganId: string;
   hargaPerJam: number;
+  qrisUrl?: string;
 }
 
-export default function BookingWidget({ lapanganId, hargaPerJam }: BookingWidgetProps) {
+export default function BookingWidget({ lapanganId, hargaPerJam, qrisUrl }: BookingWidgetProps) {
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [selectedSlots, setSelectedSlots] = useState<string[]>([]);
 
@@ -62,6 +63,7 @@ export default function BookingWidget({ lapanganId, hargaPerJam }: BookingWidget
             selectedDate={selectedDate} 
             selectedSlots={selectedSlots} 
             hargaPerJam={hargaPerJam} 
+            qrisUrl={qrisUrl}
           />
         </div>
       </div>
