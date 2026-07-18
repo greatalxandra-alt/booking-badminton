@@ -38,11 +38,12 @@ export default function FormBooking({
     catatan: "",
   });
 
+  const duration = selectedSlots.length >= 2 ? selectedSlots.length - 1 : 0;
   const isFormValid =
     formData.nama_pemesan.trim() !== "" &&
     formData.no_hp.trim().length >= 9 &&
-    selectedSlots.length > 0;
-  const totalPrice = selectedSlots.length * hargaPerJam;
+    selectedSlots.length >= 2;
+  const totalPrice = duration * hargaPerJam;
 
   // Tahap 2: Upload File
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -107,10 +108,7 @@ export default function FormBooking({
       // 2. Jika sukses upload, kirim payload lengkap ke database
       const sortedSlots = [...selectedSlots].sort();
       const jamMulai = sortedSlots[0];
-      const lastSlotHour = parseInt(
-        sortedSlots[sortedSlots.length - 1].split(":")[0],
-      );
-      const jamSelesai = `${(lastSlotHour + 1).toString().padStart(2, "0")}:00`;
+      const jamSelesai = sortedSlots[sortedSlots.length - 1];
 
       const result = await createBooking({
         lapangan_id: lapanganId,

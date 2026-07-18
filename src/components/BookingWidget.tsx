@@ -18,7 +18,8 @@ export default function BookingWidget({ lapanganId, hargaPerJam, qrisUrl }: Book
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(angka);
   };
 
-  const totalPrice = selectedSlots.length * hargaPerJam;
+  const duration = selectedSlots.length >= 2 ? selectedSlots.length - 1 : 0;
+  const totalPrice = duration * hargaPerJam;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
@@ -45,11 +46,11 @@ export default function BookingWidget({ lapanganId, hargaPerJam, qrisUrl }: Book
             <span className="text-xl font-bold font-display text-primary">{formatRupiah(hargaPerJam)}</span>
           </div>
 
-          {selectedSlots.length > 0 && (
+          {duration > 0 && (
             <div className="mb-6 p-5 rounded-xl bg-surface-darker border border-white/10">
               <div className="flex justify-between items-center mb-3">
                 <span className="text-sm font-body text-text-secondary">Durasi Main</span>
-                <span className="text-sm font-bold font-body text-white">{selectedSlots.length} Jam</span>
+                <span className="text-sm font-bold font-body text-white">{duration} Jam</span>
               </div>
               <div className="flex justify-between items-center pt-3 border-t border-white/5">
                 <span className="text-sm font-body text-text-secondary">Total Biaya</span>
