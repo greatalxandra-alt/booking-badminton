@@ -69,7 +69,7 @@ export async function createBooking(formData: z.infer<typeof bookingSchema>) {
         ...parsed.data,
         jam_mulai: `${parsed.data.jam_mulai}:00`,
         jam_selesai: `${parsed.data.jam_selesai}:00`,
-        status: "menunggu_verifikasi",
+        status: "pending",
         bukti_pembayaran_url: parsed.data.bukti_pembayaran_url,
       },
     ])
@@ -81,7 +81,9 @@ export async function createBooking(formData: z.infer<typeof bookingSchema>) {
     return { success: false, error: "Gagal membuat booking" };
   }
 
-  return { success: true, bookingId: data.id };
+  // Kembalikan short ID (8 karakter pertama UUID) untuk ditampilkan ke user
+  const shortId = data.id.substring(0, 8);
+  return { success: true, bookingId: shortId };
 }
 
 export async function getBookingById(id: string): Promise<Booking | null> {

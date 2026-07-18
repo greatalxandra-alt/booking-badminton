@@ -58,10 +58,6 @@ export async function uploadBuktiFile(formData: FormData) {
     return { success: false, error: 'Gagal upload bukti bayar' }
   }
 
-  // Get public URL
-  const { data: { publicUrl } } = supabase.storage
-    .from('bukti-bayar')
-    .getPublicUrl(uploadData.path)
-
-  return { success: true, url: publicUrl }
+  // Return the storage path (consistent with uploadBuktiBayar)
+  return { success: true, url: uploadData.path }
 }
