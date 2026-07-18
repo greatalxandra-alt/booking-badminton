@@ -12,6 +12,7 @@ const bookingSchema = z.object({
   nama_pemesan: z.string().min(1, "Nama wajib diisi"),
   no_hp: z.string().min(9, "Nomor HP tidak valid"),
   catatan: z.string().max(200).optional(),
+  bukti_pembayaran_url: z.string().optional(),
 });
 
 export async function createBooking(formData: z.infer<typeof bookingSchema>) {
@@ -68,7 +69,8 @@ export async function createBooking(formData: z.infer<typeof bookingSchema>) {
         ...parsed.data,
         jam_mulai: `${parsed.data.jam_mulai}:00`,
         jam_selesai: `${parsed.data.jam_selesai}:00`,
-        status: "pending",
+        status: "menunggu_verifikasi",
+        bukti_pembayaran_url: parsed.data.bukti_pembayaran_url,
       },
     ])
     .select("id")

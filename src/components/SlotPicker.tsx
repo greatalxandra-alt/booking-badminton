@@ -122,8 +122,14 @@ export default function SlotPicker({
     }).format(d);
   };
 
+  // Kalkulasi data jam untuk Sticky Summary
+  const jamMulai = selectedSlots.length > 0 ? selectedSlots[0] : null;
+  const jamSelesai =
+    selectedSlots.length > 0 ? selectedSlots[selectedSlots.length - 1] : null;
+
   return (
-    <div className="space-y-8">
+    // Tambah pb-24 di mobile agar konten tidak tertutup bar sticky
+    <div className="space-y-8 pb-24 md:pb-0">
       {/* Date Selector */}
       <div>
         <label className="flex items-center text-sm font-bold font-body text-white mb-4">
@@ -188,7 +194,6 @@ export default function SlotPicker({
               const isSelected = selectedSlots.includes(slot.jam);
               const isSelectingStart = selectingStart === slot.jam;
 
-              // Tentukan gaya tombol berdasarkan kondisinya
               let btnClass = "";
               if (!slot.tersedia) {
                 btnClass =
@@ -219,7 +224,7 @@ export default function SlotPicker({
           </div>
         )}
 
-        {/* Reset Button (muncul kalau sudah ada yg dipilih dan bukan sedang selecting) */}
+        {/* Reset Button */}
         {selectedSlots.length > 0 && !selectingStart && (
           <div className="mt-4 flex justify-end">
             <button
@@ -247,6 +252,46 @@ export default function SlotPicker({
           <div className="w-4 h-4 rounded-[4px] bg-surface-darker border border-white/5 opacity-50"></div>
           <span>Penuh</span>
         </div>
+      </div>
+
+      {/* Sticky Bottom Summary untuk Mobile */}
+      <div className="fixed bottom-0 left-0 right-0 bg-surface-darker/95 backdrop-blur-md border-t border-white/10 p-4 md:hidden z-50 flex items-center justify-between shadow-[0_-10px_20px_rgba(0,0,0,0.5)]">
+        <div className="space-y-0.5">
+          <p className="text-[10px] font-bold font-body text-text-secondary uppercase tracking-wider">
+            Jadwal Dipilih
+          </p>
+          <div className="text-xs font-body text-white font-medium">
+            {selectedDate ? (
+              <div className="flex flex-col">
+                <span>{formatDate(selectedDate)}</span>
+                {jamMulai && (
+                  <span className="text-primary text-[11px] font-bold mt-0.5">
+                    {jamMulai}{" "}
+                    {jamSelesai && jamSelesai !== jamMulai
+                      ? `s/d ${jamSelesai}`
+                      : ""}
+                  </span>
+                )}
+              </div>
+            ) : (
+              <span className="text-text-tertiary">Belum pilih jadwal</span>
+            )}
+          </div>
+        </div>
+
+        {/* Tombol bantu reset cepat atau info ringkas di mobile */}
+        {selectedSlots.length > 0 && (
+          <button
+            type="button"
+            onClick={() => {
+              setSelectedSlots([]);
+              setSelectingStart(null);
+            }}
+            className="bg-white/10 hover:bg-white/20 text-white text-xs font-bold font-body px-4 py-2.5 rounded-xl transition-all"
+          >
+            Hapus Pilihan
+          </button>
+        )}
       </div>
     </div>
   );
